@@ -1,3 +1,7 @@
+This is a program forked from latticelm.
+
+"-seed" option is added. Default is 0. If you set -1, the seed will be random.
+
 ------------------------------------------
 -              latticelm                 -
 -           by Graham Neubig             -

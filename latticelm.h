@@ -23,6 +23,8 @@
 #include "pylmfst.h"
 #include "weighted-mapper.h"
 #include "sampgen.h"
+#include <stdlib.h>
+#include <time.h>
 #include <unordered_map>
 #include <fst/compose.h>
 #include <fst/prune.h>
@@ -137,7 +139,8 @@ public:
 << "  -prefix:       The prefix under which to print all output." << endl
 << "  -separator:    The string to use to separate 'characters'." << endl
 << "  -cacheinput:   For WFST input, cache the WFSTs in memory (otherwise" << endl
-<< "                 they will be loaded from disk every iteration)." << endl;
+<< "                 they will be loaded from disk every iteration)." << endl
+<< "  -seed:         The seed of the random value (0)" << endl;
         if(err)
             cerr << endl << "Error: " << err << endl;
         exit(1);
@@ -217,6 +220,12 @@ public:
             else if(!strcmp(argv[argPos],"-prefix"))     prefix_ = argv[++argPos];
             else if(!strcmp(argv[argPos],"-separator"))  separator_ = argv[++argPos];
             else if(!strcmp(argv[argPos],"-cacheinput")) cacheInput_ = true;
+            else if(!strcmp(argv[argPos],"-seed")){
+              int seed = atoi(argv[++argPos]);
+              // seed(0)とseed(1)は同じ結果になってしまう．不都合なので種を変える
+              if(seed == 0) seed = 32767;
+              srand(seed>=0 ? seed : (unsigned) time(NULL));
+            }
             else {
                 err << "Illegal option: " << argv[argPos];
                 dieOnHelp(err.str().c_str());
